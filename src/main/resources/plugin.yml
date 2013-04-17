@@ -1,0 +1,14 @@
+name: ShadowBan
+main: me.blha303.shadowban.ShadowBan
+version: 1
+author: blha303
+commands:
+  shadowban:
+    description: Shadowbans a player (hides their chat messages from everyone else)
+    usage: /shadowban <player>...
+    aliases: [sban]
+    permission: shadowban.use
+permissions:
+  shadowban.use:
+    description: Allows a player to use /shadowban
+    default: op
