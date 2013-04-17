@@ -11,10 +11,10 @@ This plugin attempts to duplicate reddit's shadow-ban feature. Once shadow-banne
 
 Commands
 ----------------
-* **/shadowban <player>...** (*shadowban.use*) - Shadowbans a player (hides their chat messages from everyone else) - Alias: **/sban**
-* **/shadowbanoffline <player>...** (*shadowban.offline*) - Shadowbans a player without checking for valid username - Alias: **/sbano**
+* **/shadowban \<player>...** (*shadowban.use*) - Shadowbans a player (hides their chat messages from everyone else) - Alias: **/sban**
+* **/shadowbanoffline \<player>...** (*shadowban.offline*) - Shadowbans a player without checking for valid username - Alias: **/sbano**
 * **/shadowbanreload** (*shadowban.reload*) - Reloads ShadowBan's config from file, discarding changes - Alias: **/sbanr**
-* **/shadowunban <player>...** (*shadowban.unban*) - Removes the shadowban from a player (requires their exact username) - Alias: **/sunban**
+* **/shadowunban \<player>...** (*shadowban.unban*) - Removes the shadowban from a player (requires their exact username) - Alias: **/sunban**
 * **/shadowbanlist** (*shadowban.list*) - Lists all current shadowbans - Alias: **/sbanl**
 
 Links
