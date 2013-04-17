@@ -8,7 +8,47 @@ commands:
     usage: /shadowban <player>...
     aliases: [sban]
     permission: shadowban.use
+  shadowbanoffline:
+    description: Shadowbans a player without checking for valid username
+    usage: /shadowbanoffline <player>...
+    aliases: [sbano]
+    permission: shadowban.offline
+  shadowbanreload:
+    description: Reloads ShadowBan's config from file, discarding changes
+    usage: /shadowbanreload
+    aliases: [sbanr]
+    permission: shadowban.reload
+  shadowunban:
+    description: Removes the shadowban from a player (requires their exact username)
+    usage: /shadowunban <player>...
+    aliases: [sunban]
+    permission: shadowban.unban
+  shadowbanlist:
+    description: Lists all current shadowbans
+    usage: /shadowbanlist
+    aliases: [sbanl]
+    permission: shadowban.list
 permissions:
   shadowban.use:
     description: Allows a player to use /shadowban
     default: op
+  shadowban.offline:
+    description: Allows a player to use /shadowbanoffline
+    default: op
+  shadowban.reload:
+    description: Allows a player to use /shadowbanreload
+    default: op
+  shadowban.unban:
+    description: Allows a player to use /shadowunban
+    default: op
+  shadowban.list:
+    description: Allows a player to use /shadowlist
+    default: op
+  shadowban.*:
+    description: Allows a player to use all ShadowBan commands
+    children:
+      shadowban.use: true
+      shadowban.offline: true
+      shadowban.reload: true
+      shadowban.unban: true
+      shadowban.list: true
