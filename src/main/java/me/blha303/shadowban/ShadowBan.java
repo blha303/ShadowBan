@@ -1,7 +1,9 @@
 package me.blha303.shadowban;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,7 +19,7 @@ import com.google.common.base.Joiner;
 
 public class ShadowBan extends JavaPlugin implements Listener {
 
-    List<String> playerlist = new ArrayList<String>();
+    Set<String> playerSet = Collections.synchronizedSet(new HashSet<String>());
     boolean debug;
 
     public void onEnable() {
@@ -25,7 +27,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
         debug = getConfig().getBoolean("debug");
         getServer().getPluginManager().registerEvents(this, this);
         debug("Events registered");
-        playerlist = getConfig().getStringList("shadowbannedList");
+        playerSet.addAll(getConfig().getStringList("shadowbannedList"));
     }
 
     public void onDisable() {
@@ -37,10 +39,10 @@ public class ShadowBan extends JavaPlugin implements Listener {
             this.getLogger().info("DEBUG: " + msg);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         debug("Entered PlayerChatEvent");
-        if (playerlist.contains(event.getPlayer().getName())) {
+        if (playerSet.contains(event.getPlayer().getName())) {
             debug("Playerlist contains this name!");
             event.getRecipients().clear();
             debug("List cleared");
@@ -63,14 +65,14 @@ public class ShadowBan extends JavaPlugin implements Listener {
                             debug("Entered for loop");
                             if (getServer().getPlayer(arg) != null) {
                                 debug("Adding arg to playerlist");
-                                playerlist.add(getServer().getPlayer(arg).getName());
+                                playerSet.add(getServer().getPlayer(arg).getName());
                                 debug("arg added");
                             } else {
                                 debug("couldn't find player from arg");
                                 sender.sendMessage(prefix + ChatColor.WHITE + "Could not find player \"" + ChatColor.RED + arg + ChatColor.WHITE + "\"");
                                 return true;
                             }
-                            getConfig().set("shadowbannedList", playerlist);
+                            getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                             saveConfig();
                             sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg) + " " + ChatColor.WHITE + "added to shadowban list");
                             return true;
@@ -87,12 +89,12 @@ public class ShadowBan extends JavaPlugin implements Listener {
                 if (args.length >= 1) {
                     for (String arg : args) {
                         if (getServer().getPlayer(arg) != null) {
-                            playerlist.add(getServer().getPlayer(arg).getName());
+                            playerSet.add(getServer().getPlayer(arg).getName());
                         } else {
                             sender.sendMessage(prefix + ChatColor.WHITE + "Could not find player \"" + ChatColor.RED + arg + ChatColor.WHITE + "\"");
                             return true;
                         }
-                        getConfig().set("shadowbannedList", playerlist);
+                        getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                         saveConfig();
                         sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg) + " " + ChatColor.WHITE + "added to shadowban list");
                         return true;
@@ -110,9 +112,9 @@ public class ShadowBan extends JavaPlugin implements Listener {
                         for (String arg : args) {
                             debug("Entered for loop");
                             debug("Adding arg to playerlist");
-                            playerlist.add(arg);
+                            playerSet.add(arg);
                             debug("arg added");
-                            getConfig().set("shadowbannedList", playerlist);
+                            getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                             saveConfig();
                             sender.sendMessage(prefix + ChatColor.GREEN + arg + " " + ChatColor.WHITE + "added to shadowban list");
                             return true;
@@ -128,8 +130,8 @@ public class ShadowBan extends JavaPlugin implements Listener {
             } else {
                 if (args.length >= 1) {
                     for (String arg : args) {
-                        playerlist.add(arg);
-                        getConfig().set("shadowbannedList", playerlist);
+                        playerSet.add(arg);
+                        getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                         saveConfig();
                         sender.sendMessage(prefix + ChatColor.GREEN + arg + " " + ChatColor.WHITE + "added to shadowban list");
                         return true;
@@ -147,9 +149,9 @@ public class ShadowBan extends JavaPlugin implements Listener {
                         for (String arg : args) {
                             debug("Entered for loop");
                             debug("Removing arg from playerlist");
-                            playerlist.remove(arg);
+                            playerSet.remove(arg);
                             debug("arg removed");
-                            getConfig().set("shadowbannedList", playerlist);
+                            getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                             saveConfig();
                             sender.sendMessage(prefix + ChatColor.GREEN + arg + " " + ChatColor.WHITE + "removed from shadowban list");
                             return true;
@@ -165,8 +167,8 @@ public class ShadowBan extends JavaPlugin implements Listener {
             } else {
                 if (args.length >= 1) {
                     for (String arg : args) {
-                        playerlist.remove(arg);
-                        getConfig().set("shadowbannedList", playerlist);
+                        playerSet.remove(arg);
+                        getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                         saveConfig();
                         sender.sendMessage(prefix + ChatColor.GREEN + arg + " " + ChatColor.WHITE + "removed from shadowban list");
                         return true;
@@ -177,7 +179,8 @@ public class ShadowBan extends JavaPlugin implements Listener {
             }
         } else if (command.getLabel().equalsIgnoreCase("shadowbanreload")) {
             if (sender.hasPermission("shadowban.reload")) {
-                playerlist = getConfig().getStringList("shadowbannedList");
+                playerSet.clear();
+                playerSet.addAll(getConfig().getStringList("shadowbannedList"));
                 sender.sendMessage(prefix + ChatColor.WHITE + "Config reloaded.");
                 return true;
             } else {
@@ -186,7 +189,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
             }
         } else if (command.getLabel().equalsIgnoreCase("shadowbanlist")) {
             if (sender.hasPermission("shadowban.list")) {
-                String list = ChatColor.GREEN + Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(playerlist);
+                String list = ChatColor.GREEN + Joiner.on(ChatColor.WHITE + ", " + ChatColor.GREEN).join(playerSet);
                 sender.sendMessage(prefix + list);
                 return true;
             } else {
