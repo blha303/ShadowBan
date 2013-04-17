@@ -38,7 +38,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerJoin(AsyncPlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         debug("Entered PlayerChatEvent");
         if (playerlist.contains(event.getPlayer().getName())) {
             debug("Playerlist contains this name!");
