@@ -4,7 +4,9 @@ ShadowBan
 [![Build Status](https://travis-ci.org/blha303/ShadowBan.png?branch=master)](https://travis-ci.org/blha303/ShadowBan)
 
 This plugin attempts to duplicate reddit's shadow-ban feature. Once shadow-banned, any messages from the player are hidden to everyone but themselves.
+
 ![Banned player view](http://i.imgur.com/qS1JF0R.png) *Banned player*
+
 ![View for everyone else](http://i.imgur.com/EnJ2GVk.png) *Everyone else*
 
 Commands
