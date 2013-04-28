@@ -22,7 +22,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
 
     Set<String> playerSet = Collections.synchronizedSet(new HashSet<String>());
     boolean debug;
-    private CraftIRC craftirc = null;
+//    private CraftIRC craftirc = null;
 
     public void onEnable() {
         saveDefaultConfig();
