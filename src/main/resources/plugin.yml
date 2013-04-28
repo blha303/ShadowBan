@@ -1,6 +1,6 @@
 name: ShadowBan
 main: me.blha303.shadowban.ShadowBan
-version: 1
+version: 2
 author: blha303
 commands:
   shadowban:

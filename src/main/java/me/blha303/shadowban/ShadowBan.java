@@ -15,12 +15,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.ensifera.animosity.craftirc.CraftIRC;
 import com.google.common.base.Joiner;
 
 public class ShadowBan extends JavaPlugin implements Listener {
 
     Set<String> playerSet = Collections.synchronizedSet(new HashSet<String>());
     boolean debug;
+    private CraftIRC craftirc = null;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -28,6 +30,9 @@ public class ShadowBan extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         debug("Events registered");
         playerSet.addAll(getConfig().getStringList("shadowbannedList"));
+        if (getServer().getPluginManager().getPlugin("CraftIRC") != null) {
+            craftirc = (CraftIRC) getServer().getPluginManager().getPlugin("CraftIRC");
+        }
     }
 
     public void onDisable() {
@@ -42,13 +47,17 @@ public class ShadowBan extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         debug("Entered PlayerChatEvent");
+        debug("Trying to cancel sending to CraftIRC");
+        if (craftirc != null) {
+            event.getHandlers().unregister(craftirc);
+        }
+        debug("Wonder if that worked.");
         if (playerSet.contains(event.getPlayer().getName())) {
             debug("Playerlist contains this name!");
             event.getRecipients().clear();
             debug("List cleared");
             event.getRecipients().add(event.getPlayer());
             debug("Recipient added");
-            this.getLogger().info(event.getPlayer().getName() + " tried to say: " + event.getMessage());
             debug("Message sent");
         }
     }
@@ -74,7 +83,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
                             }
                             getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                             saveConfig();
-                            sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg) + " " + ChatColor.WHITE + "added to shadowban list");
+                            sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg).getName() + " " + ChatColor.WHITE + "added to shadowban list");
                             return true;
                         }
                     } else {
@@ -96,7 +105,7 @@ public class ShadowBan extends JavaPlugin implements Listener {
                         }
                         getConfig().set("shadowbannedList", Arrays.asList(playerSet.toArray(new String[playerSet.size()])));
                         saveConfig();
-                        sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg) + " " + ChatColor.WHITE + "added to shadowban list");
+                        sender.sendMessage(prefix + ChatColor.GREEN + getServer().getPlayer(arg).getName() + " " + ChatColor.WHITE + "added to shadowban list");
                         return true;
                     }
                 } else {
