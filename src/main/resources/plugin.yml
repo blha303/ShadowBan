@@ -2,6 +2,7 @@ name: ShadowBan
 main: me.blha303.shadowban.ShadowBan
 version: 2
 author: blha303
+softdepend: [CraftIRC]
 commands:
   shadowban:
     description: Shadowbans a player (hides their chat messages from everyone else)
