@@ -47,16 +47,16 @@ public class ShadowBan extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         debug("Entered PlayerChatEvent");
-        debug("Trying to cancel sending to CraftIRC");
-        if (craftirc != null) {
-            event.getHandlers().unregister(craftirc);
-        }
-        debug("Wonder if that worked.");
         if (playerSet.contains(event.getPlayer().getName())) {
             debug("Playerlist contains this name!");
             event.getRecipients().clear();
             debug("List cleared");
             event.getRecipients().add(event.getPlayer());
+            debug("Trying to cancel sending to CraftIRC");
+            if (craftirc != null) {
+                event.getHandlers().unregister(craftirc);
+            }
+            debug("Wonder if that worked.");
             debug("Recipient added");
             debug("Message sent");
         }
